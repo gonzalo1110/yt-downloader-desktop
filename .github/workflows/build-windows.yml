@@ -1,0 +1,102 @@
+name: Build Windows Installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión a buildear (ej: 1.0.0)'
+        required: false
+        default: '1.0.0'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Descargar FFmpeg (LGPL build)
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path resources
+          Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win64-lgpl.zip" -OutFile ffmpeg.zip
+          Expand-Archive -Path ffmpeg.zip -DestinationPath ffmpeg_extracted
+          $binDir = Get-ChildItem -Path ffmpeg_extracted -Recurse -Directory -Filter "bin" | Select-Object -First 1
+          Copy-Item "$($binDir.FullName)\ffmpeg.exe" -Destination resources\ffmpeg.exe
+          Copy-Item "$($binDir.FullName)\ffprobe.exe" -Destination resources\ffprobe.exe
+
+      - name: Descargar Deno
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-pc-windows-msvc.zip" -OutFile deno.zip
+          Expand-Archive -Path deno.zip -DestinationPath deno_extracted
+          Copy-Item deno_extracted\deno.exe -Destination resources\deno.exe
+
+      - name: Verificar binarios
+        shell: powershell
+        run: |
+          Get-ChildItem resources\
+          & resources\ffmpeg.exe -version | Select-String "enable-lgpl"
+
+      - name: Instalar dependencias Python
+        run: |
+          pip install -r requirements.txt
+          pip install nuitka
+
+      - name: Build con Nuitka
+        shell: cmd
+        run: |
+          python -m nuitka ^
+            --standalone ^
+            --onefile ^
+            --windows-console-mode=disable ^
+            --enable-plugin=pyside6 ^
+            --include-package=src ^
+            --include-data-file=resources\ffmpeg.exe=ffmpeg.exe ^
+            --include-data-file=resources\ffprobe.exe=ffprobe.exe ^
+            --include-data-file=resources\deno.exe=deno.exe ^
+            --windows-icon-from-ico=resources\icon.ico ^
+            --company-name="YTDownloader" ^
+            --product-name="YT Downloader" ^
+            --file-version=${{ github.event.inputs.version }}.0 ^
+            --product-version=${{ github.event.inputs.version }}.0 ^
+            --output-dir=dist ^
+            src\main.py
+
+      - name: Verificar que main.exe se generó
+        shell: powershell
+        run: |
+          if (-not (Test-Path "dist\main.exe")) {
+            Write-Error "main.exe no fue generado por Nuitka"
+            exit 1
+          }
+          Get-Item dist\main.exe
+
+      - name: Instalar Inno Setup
+        shell: powershell
+        run: choco install innosetup -y
+
+      - name: Compilar instalador con Inno Setup
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+
+      - name: Subir main.exe (standalone) como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YTDownloader-standalone-exe
+          path: dist\main.exe
+
+      - name: Subir instalador como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YTDownloader-Setup
+          path: |
+            dist\*Setup*.exe
+            installer\Output\*.exe
+          if-no-files-found: warn
