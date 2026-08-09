@@ -1,0 +1,86 @@
+========================================================================
+  LICENCIAS / LICENSES — YT Downloader
+========================================================================
+
+YT Downloader is distributed as a standalone application that includes
+third-party components under their own licenses. The licenses for these
+components are listed below.
+
+========================================================================
+  1. FFmpeg — LGPL v2.1+
+========================================================================
+
+This application uses FFmpeg (https://ffmpeg.org) under the GNU Lesser
+General Public License version 2.1 or later (LGPL v2.1+).
+
+FFmpeg is Copyright (c) the FFmpeg contributors.
+
+The LGPL-licensed build used in this application does NOT include
+GPL-licensed components such as libx264 or libx265. It includes only
+LGPL-compatible codecs (libmp3lame, FLAC, etc.).
+
+Full license text: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+Source code: https://github.com/FFmpeg/FFmpeg
+Build scripts: https://github.com/BtbN/FFmpeg-Builds
+
+If you wish to obtain the source code for the FFmpeg library used in
+this application, you can download it from the official FFmpeg repository
+at https://ffmpeg.org/download.html
+
+========================================================================
+  2. yt-dlp — Unlicense
+========================================================================
+
+This application uses yt-dlp (https://github.com/yt-dlp/yt-dlp) which
+is released into the public domain under the Unlicense.
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any means.
+
+For more information: https://unlicense.org
+
+========================================================================
+  3. Deno — MIT License
+========================================================================
+
+This application bundles the Deno JavaScript runtime
+(https://deno.com) which is licensed under the MIT License.
+
+Copyright (c) 2018-2025 the Deno authors
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+========================================================================
+  4. Additional Python dependencies
+========================================================================
+
+This application uses the following Python packages under their
+respective licenses:
+
+- PySide6: LGPL v3 / GPL v2+ (Qt for Python)
+- mutagen: GPL v2+ / LGPL v2.1+ (tagging audio metadata)
+- pycryptodomex: Public Domain / BSD 2-Clause (cryptographic library)
+- secretstorage: BSD 3-Clause (Linux keyring integration)
+
+Each of these packages is used in compliance with its license terms.

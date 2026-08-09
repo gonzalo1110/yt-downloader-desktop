@@ -1,0 +1,32 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Build artifacts de Nuitka
+*.build/
+*.dist/
+*.onefile-build/
+main.exe
+*.exe.spec
+
+# Output del installer
+installer/Output/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archivos locales/config personal
+*.log
+config.json
